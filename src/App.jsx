@@ -14,8 +14,13 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
-    setIsSubmit(true);
-    sessionStorage.setItem("data",JSON.stringify(formValues))
+   if(Object.keys(formErrors).length === 0 && isSubmit){
+    setIsSubmit(true)
+   }
+    if(isSubmit){
+      sessionStorage.setItem("data",JSON.stringify(formValues))
+    }
+   
   };
 
   const validate = (values) => {
