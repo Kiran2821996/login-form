@@ -1,11 +1,10 @@
 import { useState} from "react";
-import "./App.css";
 
 function App() {
   const initialValues = { username: "", password: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(JSON.parse(sessionStorage.getItem("data"))?true:false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,9 +15,9 @@ function App() {
     e.preventDefault();
     setFormErrors(validate(formValues));
     setIsSubmit(true);
-    sessionStorage.setItem("data",JSON.stringify(formValues) )
+    sessionStorage.setItem("data",JSON.stringify(formValues))
   };
-  
+
   const validate = (values) => {
     const errors = {}
     if (!values.username) {
@@ -29,7 +28,7 @@ function App() {
       errors.password = "Password is required";
     } else if (values.password.length < 4) {
       errors.password = "Password must be more than 4 characters";
-    } else if (values.password.length > 10) {
+    } else if (values.password.length > 8) {
       errors.password = "Password cannot exceed more than 10 characters";
     }
     return errors;
@@ -43,7 +42,8 @@ function App() {
     <div className="container">
       {Object.keys(formErrors).length === 0 && isSubmit ? (
         <>
-          <div>hello {formValues.username} ,Signed in successfully</div>
+        
+          <div>hello {JSON.parse(sessionStorage.getItem("data")).username} ,Signed in successfully</div>
        <button onClick={logout}>LOG OUT</button>
         </>
       
