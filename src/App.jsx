@@ -1,10 +1,12 @@
-import { useState} from "react";
+import { useState } from "react";
 
 function App() {
-  const initialValues = { username: "", password: "" };
+  const initialValues = { username:"", password: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(JSON.parse(sessionStorage.getItem("data"))?true:false);
+  const [isSubmit, setIsSubmit] = useState(
+    JSON.parse(localStorage.getItem("data")) ? true : false
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -14,17 +16,11 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
-   if(Object.keys(formErrors).length === 0 && isSubmit){
-    setIsSubmit(true)
-   }
-    if(isSubmit){
-      sessionStorage.setItem("data",JSON.stringify(formValues))
-    }
-   
+    setIsSubmit(true);
   };
 
   const validate = (values) => {
-    const errors = {}
+    const errors = {};
     if (!values.username) {
       errors.username = "Username is required!";
     }
@@ -38,51 +34,53 @@ function App() {
     }
     return errors;
   };
-  const logout =()=>{
+  const logout = () => {
     setIsSubmit(false);
-    sessionStorage.clear()
-  }
+    localStorage.clear();
+  };
+
+
 
   return (
     <div className="container">
       {Object.keys(formErrors).length === 0 && isSubmit ? (
         <>
-        
-          <div>hello {JSON.parse(sessionStorage.getItem("data")).username} ,Signed in successfully</div>
-       <button onClick={logout}>LOG OUT</button>
+         {localStorage.setItem("data", JSON.stringify(formValues))}
+          <div>
+            hello {JSON.parse(localStorage.getItem("data")).username} ,Signed
+            in successfully
+          </div>
+          <button onClick={logout}>LOG OUT</button>
         </>
-      
       ) : (
         <form onSubmit={handleSubmit}>
-        <div >
-          <div >
-            <label>Username</label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={formValues.username}
-              onChange={handleChange}
-            />
-          </div>
-          <p>{formErrors.username}</p>
           <div>
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formValues.password}
-              onChange={handleChange}
-            />
+            <div>
+              <label>Username</label>
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={formValues.username}
+                onChange={handleChange}
+              />
+            </div>
+            <p>{formErrors.username}</p>
+            <div>
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={formValues.password}
+                onChange={handleChange}
+              />
+            </div>
+            <p>{formErrors.password}</p>
+            <button>Submit</button>
           </div>
-          <p>{formErrors.password}</p>
-          <button>Submit</button>
-        </div>
-      </form>
+        </form>
       )}
-
-     
     </div>
   );
 }
